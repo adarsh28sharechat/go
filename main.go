@@ -1,9 +1,6 @@
 package main
 
-import (
-	"fmt"
-	//_ "github.com/go-sql-driver/mysql"
-)
+import "fmt"
 
 //const correctPassword = "12345"
 
@@ -38,27 +35,29 @@ import (
 //	return nil
 //}
 
-func oneval(i int) {
-	i = 3
-	fmt.Println("inside", &i)
+type geometry interface {
+	area() int
+}
+type reactangle struct {
+	lenght int
+	width  int
 }
 
-func oneptr(i *int) {
-	*i = 0
+func (re reactangle) area() int {
+	return re.lenght * re.width
+}
+
+func measure(g geometry) {
+	fmt.Println("a--", g.area())
 }
 
 func main() {
-	i := 1
-	fmt.Println("initial", i)
-
-	oneval(i)
-	fmt.Println("oneval", i)
-
-	oneptr(&i)
-	fmt.Println("oneptr", i)
-
-	fmt.Println("poinyer", &i)
-
+	r := reactangle{width: 10, lenght: 5}
+	fmt.Println("area", r.area())
+	measure(r)
+	//
+	//rp := &r
+	//fmt.Println("area", rp.area())
 	//cards := newDeck()
 	//hand, remaining := deal(cards, 5)
 	//hand.print()
