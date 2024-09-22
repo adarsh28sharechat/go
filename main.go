@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sync"
 	"time"
 )
 
@@ -38,19 +39,50 @@ import (
 //	return nil
 //}
 
-func f(from string) {
-	for i := 0; i < 3; i++ {
-		fmt.Println(from, ":", i)
-	}
+func f(st string, wg *sync.WaitGroup, ch *chan string) {
+	defer wg.Done()
+	*ch <- st
 }
 
 func main() {
-	f("adarsh")
-	go f("adarshdixit")
-	func(msg string) {
-		fmt.Println(msg)
-	}("going")
-	time.Sleep(time.Second)
+	var wg sync.WaitGroup
+
+	c1 := make(chan string, 2)
+	wg.Add(1)
+	f("first chan", &wg, &c1)
+	wg.Add(1)
+	time.Sleep(1 * time.Second)
+	f("sec chan", &wg, &c1)
+
+	wg.Wait()
+	close(c1)
+	for ch := range c1 {
+		fmt.Println(ch)
+	}
+	//c2 := make(chan string)
+
+	//go func() {
+	//	time.Sleep(time.Second)
+	//	c1 <- "first chan"
+	//}()
+	//go func() {
+	//	time.Sleep(time.Second)
+	//	c2 <- "second chan"
+	//}()
+	for i := 0; i < 2; i++ {
+
+	}
+	//var wg sync.WaitGroup
+	//
+	//for i := 0; i < 3; i++ {
+	//	wg.Add(1)
+	//	//time.Sleep(time.Second)
+	//	go func() {
+	//		//time.Sleep(time.Second)
+	//		f(i, &wg)
+	//	}()
+	//}
+	//wg.Wait()
 	//
 	//rp := &r
 	//fmt.Println("area", rp.area())
