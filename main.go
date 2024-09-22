@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 //const correctPassword = "12345"
 
@@ -35,26 +38,19 @@ import "fmt"
 //	return nil
 //}
 
-type geometry interface {
-	area() int
-}
-type reactangle struct {
-	lenght int
-	width  int
-}
-
-func (re reactangle) area() int {
-	return re.lenght * re.width
-}
-
-func measure(g geometry) {
-	fmt.Println("a--", g.area())
+func f(from string) {
+	for i := 0; i < 3; i++ {
+		fmt.Println(from, ":", i)
+	}
 }
 
 func main() {
-	r := reactangle{width: 10, lenght: 5}
-	fmt.Println("area", r.area())
-	measure(r)
+	f("adarsh")
+	go f("adarshdixit")
+	func(msg string) {
+		fmt.Println(msg)
+	}("going")
+	time.Sleep(time.Second)
 	//
 	//rp := &r
 	//fmt.Println("area", rp.area())
