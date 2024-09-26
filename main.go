@@ -1,10 +1,6 @@
 package main
 
-import (
-	"fmt"
-	"sync"
-	"time"
-)
+import "fmt"
 
 //const correctPassword = "12345"
 
@@ -39,26 +35,65 @@ import (
 //	return nil
 //}
 
-func f(st string, wg *sync.WaitGroup, ch *chan string) {
-	defer wg.Done()
-	*ch <- st
+//func f(st string, wg *sync.WaitGroup, ch *chan string) {
+//	defer wg.Done()
+//	*ch <- st
+//}
+
+type changeConfig interface {
+	alterAdUnit() data
+	alterEcpm() data
+}
+
+type data struct {
+	adUnit string
+	ecpm   string
+}
+
+func (c data) alterAdUnit() data {
+	c.adUnit = "/2345678/new-adunit"
+	return c
+}
+func (c data) alterEcpm() data {
+	c.ecpm = "23"
+	return c
+}
+
+func alteration(c changeConfig) {
+	fmt.Println(c.alterAdUnit())
+	fmt.Println(c.alterEcpm())
 }
 
 func main() {
-	var wg sync.WaitGroup
-
-	c1 := make(chan string, 2)
-	wg.Add(1)
-	f("first chan", &wg, &c1)
-	wg.Add(1)
-	time.Sleep(1 * time.Second)
-	f("sec chan", &wg, &c1)
-
-	wg.Wait()
-	close(c1)
-	for ch := range c1 {
-		fmt.Println(ch)
-	}
+	r := data{adUnit: "/54678909876/old-adunit", ecpm: "21"}
+	alteration(r)
+	//var ns []string
+	//s := make([]string, 1)
+	//s = []string{"a", "b", "c", "d"}
+	//copy(ns, s)
+	//ns = s
+	//fmt.Println("ns", ns)
+	//fmt.Println("length", len(s), "capacity", cap(s))
+	//requests := make(chan int, 5)
+	//for i := 1; i <= 5; i++ {
+	//	requests <- i
+	//}
+	//close(requests)
+	//fmt.Println("Starting server...", &requests)
+	//var wg sync.WaitGroup
+	//
+	//c1 := make(chan string, 2)
+	//wg.Add(1)
+	//f("first chan", &wg, &c1)
+	//wg.Add(1)
+	//time.Sleep(1 * time.Second)
+	//f("sec chan", &wg, &c1)
+	//
+	//wg.Wait()
+	//close(c1)
+	//for ch := range c1 {
+	//	fmt.Println(ch)
+	//}
 	//c2 := make(chan string)
 
 	//go func() {
@@ -69,9 +104,9 @@ func main() {
 	//	time.Sleep(time.Second)
 	//	c2 <- "second chan"
 	//}()
-	for i := 0; i < 2; i++ {
-
-	}
+	//for i := 0; i < 2; i++ {
+	//
+	//}
 	//var wg sync.WaitGroup
 	//
 	//for i := 0; i < 3; i++ {
